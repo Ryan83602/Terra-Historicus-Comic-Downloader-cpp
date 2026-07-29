@@ -50,14 +50,6 @@
 - 下载目录不能包含特殊字符（如 `#`、`%`），建议放在纯英文路径下运行。
 - 如遇网络错误，程序会自动重试 5 次，请保持网络畅通。
 
----
-
-## 📜 许可证
-
-本项目采用 [GUN](LICENSE) 开源协议。
-
----
-
 ## 🔗 链接
 
 - [GitHub 仓库](https://github.com/Ryan83602/Terra-Historicus-Comic-Downloader-cpp)
