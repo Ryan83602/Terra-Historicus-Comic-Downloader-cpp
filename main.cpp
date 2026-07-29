@@ -376,9 +376,8 @@ void download_episode(const string& comic_id,
 }
 
 int main(int argc, char* argv[]) {
-    // 设置全局 locale（影响 cout 的编码行为，配合 Windows UTF-8 控制台）
     setlocale(LC_ALL, "en_US.UTF-8");
-    enable_utf8_console();   // Windows 下切换控制台为 UTF-8
+    enable_utf8_console();
     init_log_file();
 
     curl_global_init(CURL_GLOBAL_ALL);
