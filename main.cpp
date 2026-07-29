@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cctype>
 #include <mutex>
+#include <clocale>
 
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
@@ -22,18 +23,14 @@ namespace fs = std::filesystem;
 
 #ifdef _WIN32
 #include <windows.h>
-static void enable_ansi_colors() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut != INVALID_HANDLE_VALUE) {
-        DWORD dwMode = 0;
-        if (GetConsoleMode(hOut, &dwMode)) {
-            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            SetConsoleMode(hOut, dwMode);
-        }
-    }
+static void enable_utf8_console() {
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    setvbuf(stdout, nullptr, _IOFBF, 4096);
+    setvbuf(stderr, nullptr, _IOFBF, 4096);
 }
 #else
-static void enable_ansi_colors() {}
+static void enable_utf8_console() {}
 #endif
 
 #define COLOR_RESET   "\033[0m"
@@ -263,7 +260,7 @@ void download_episode(const string& comic_id,
     string prefix = to_string(idx);
     while (prefix.size() < width) prefix = "0" + prefix;
     string dir_name = prefix + "_" + base_name;
-    fs::path save_dir = save_root / dir_name;
+    fs::path save_dir = save_root / fs::u8path(dir_name);
 
     json res_data;
     if (!g_working_template.empty()) {
@@ -368,7 +365,7 @@ void download_episode(const string& comic_id,
         string img_name = to_string(page_num);
         while (img_name.size() < 3) img_name = "0" + img_name;
         img_name += ext;
-        fs::path img_path = save_dir / img_name;
+        fs::path img_path = save_dir / fs::u8path(img_name);
         dl_futures.emplace_back(async(launch::async, download_image, url, img_path.string()));
     }
     for (auto& fut : dl_futures) {
@@ -379,7 +376,9 @@ void download_episode(const string& comic_id,
 }
 
 int main(int argc, char* argv[]) {
-    enable_ansi_colors();
+    // 设置全局 locale（影响 cout 的编码行为，配合 Windows UTF-8 控制台）
+    setlocale(LC_ALL, "en_US.UTF-8");
+    enable_utf8_console();   // Windows 下切换控制台为 UTF-8
     init_log_file();
 
     curl_global_init(CURL_GLOBAL_ALL);
@@ -400,8 +399,13 @@ int main(int argc, char* argv[]) {
     auto comic_data = res["data"];
     string comic_title = sanitize_path(comic_data.value("title", "Comic_" + comic_id));
 
-    fs::path exe_dir = fs::path(argv[0]).parent_path();
-    fs::path save_root = exe_dir / comic_title;
+    fs::path exe_dir;
+    try {
+        exe_dir = fs::u8path(argv[0]).parent_path();
+    } catch (...) {
+        exe_dir = ".";
+    }
+    fs::path save_root = exe_dir / fs::u8path(comic_title);
 
     auto episodes = comic_data["episodes"];
     if (!episodes.is_array() || episodes.empty()) {
