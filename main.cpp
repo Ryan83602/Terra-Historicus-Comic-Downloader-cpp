@@ -136,6 +136,7 @@ static size_t write_callback(void* contents, size_t size, size_t nmemb, string* 
     return total;
 }
 
+
 string http_get(const string& url, const string& headers, long timeout_sec = 10) {
     CURL* curl = curl_easy_init();
     if (!curl) return "";
