@@ -82,7 +82,6 @@ const string HEADERS_IMG =
 
 string g_working_template = "";
 
-
 string sanitize_path(const string& name) {
     string result;
     for (unsigned char ch : name) {
