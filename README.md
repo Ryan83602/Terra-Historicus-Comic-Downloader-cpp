@@ -12,12 +12,7 @@
 - 若需指定漫画 ID，可在命令行中执行：`terra.exe 6253`
 
 ### 🍎 macOS (通用二进制，支持 Intel 和 Apple Silicon)
-- 下载 **[terra-mac](https://github.com/Ryan83602/Terra-Historicus-Comic-Downloader-cpp/releases/latest/download/terra-mac)**
-- 双击运行，若提示“无法打开”，请打开终端执行：
-  ```bash
-  chmod +x terra-mac
-  ./terra-mac 6253
-  ```
+- **macOS**：下载 **[terra-mac.zip](https://github.com/Ryan83602/Terra-Historicus-Comic-Downloader-cpp/releases/latest/download/terra-mac.zip)**，解压后双击 `terra` 运行。若提示“无法打开”，请右键点击文件选择“打开”并确认。
 - 首次运行可能需要允许未签名应用（系统偏好设置 → 安全性与隐私 → 仍要打开）
 
 ---
