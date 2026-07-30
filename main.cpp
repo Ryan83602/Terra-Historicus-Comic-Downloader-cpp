@@ -82,36 +82,28 @@ const string HEADERS_IMG =
 
 string g_working_template = "";
 
+
 string sanitize_path(const string& name) {
     string result;
-    for (char ch : name) {
+    for (unsigned char ch : name) {
+
+        if (ch < 0x20 || ch == 0x7F) {
+            continue;
+        }
+
         if (ch == '\\' || ch == '/' || ch == ':' || ch == '*' || ch == '?' ||
             ch == '"' || ch == '<' || ch == '>' || ch == '|') {
             continue;
         }
-        result.push_back(ch);
+        result.push_back(static_cast<char>(ch));
     }
-    auto is_ws = [](char c) {
-        return isspace(static_cast<unsigned char>(c)) || c == '\xA0';
-    };
-    size_t start = 0, end = result.size();
-    while (start < end && is_ws(result[start])) ++start;
-    while (end > start && is_ws(result[end - 1])) --end;
-    result = result.substr(start, end - start);
-    string cleaned;
-    for (size_t i = 0; i < result.size(); ) {
-        unsigned char c = result[i];
-        if (c == 0xE2 && i + 2 < result.size() && result[i+1] == 0x80 && (result[i+2] == 0x8B || result[i+2] == 0x8C || result[i+2] == 0x8D)) {
-            i += 3;
-            continue;
-        } else if (c == 0xEF && i + 2 < result.size() && result[i+1] == 0xBB && result[i+2] == 0xBF) {
-            i += 3;
-            continue;
-        }
-        cleaned.push_back(result[i]);
-        ++i;
-    }
-    return cleaned;
+
+    size_t start = result.find_first_not_of(" \t\n\r");
+    if (start == string::npos) return "chapter";
+    size_t end = result.find_last_not_of(" \t\n\r");
+    result = result.substr(start, end - start + 1);
+    if (result.empty()) return "chapter";
+    return result;
 }
 
 void find_all_image_urls(const json& data, vector<string>& urls) {
@@ -260,7 +252,21 @@ void download_episode(const string& comic_id,
     string prefix = to_string(idx);
     while (prefix.size() < width) prefix = "0" + prefix;
     string dir_name = prefix + "_" + base_name;
-    fs::path save_dir = save_root / fs::u8path(dir_name);
+
+    fs::path save_dir;
+    try {
+        save_dir = save_root / fs::u8path(dir_name);
+        fs::create_directories(save_dir);
+    } catch (const fs::filesystem_error& e) {
+        log_warn("Cannot create directory with name: " + dir_name + ", using fallback: " + prefix + "_chapter");
+        string fallback = prefix + "_chapter";
+        save_dir = save_root / fs::u8path(fallback);
+        fs::create_directories(save_dir);
+    } catch (...) {
+        log_err("Unexpected error, using emergency fallback: " + prefix + "_ep");
+        save_dir = save_root / fs::u8path(prefix + "_ep");
+        fs::create_directories(save_dir);
+    }
 
     json res_data;
     if (!g_working_template.empty()) {
@@ -315,6 +321,7 @@ void download_episode(const string& comic_id,
         return;
     }
 
+
     if (fs::exists(save_dir)) {
         vector<string> downloaded;
         for (const auto& entry : fs::directory_iterator(save_dir)) {
@@ -335,7 +342,6 @@ void download_episode(const string& comic_id,
         }
     }
 
-    fs::create_directories(save_dir);
     log_info("Downloading episode: " + dir_name + " (" + to_string(page_count) + " pages)...");
 
     vector<future<pair<int, string>>> url_futures;
@@ -404,7 +410,13 @@ int main(int argc, char* argv[]) {
     } catch (...) {
         exe_dir = ".";
     }
-    fs::path save_root = exe_dir / fs::u8path(comic_title);
+
+    fs::path save_root;
+    try {
+        save_root = exe_dir / fs::u8path(comic_title);
+    } catch (...) {
+        save_root = exe_dir / "Comic";
+    }
 
     auto episodes = comic_data["episodes"];
     if (!episodes.is_array() || episodes.empty()) {
