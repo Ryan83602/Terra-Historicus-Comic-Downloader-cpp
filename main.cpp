@@ -443,6 +443,8 @@ int main(int argc, char* argv[]) {
     }
 
     log_info("All " + to_string(total_eps) + " episodes synchronized. Check folder: \"" + save_root.string() + "\"");
+    log_info("作者:Ryan83602,如果您是付费购买,请拉黑并举报卖家");
+    log_info("项目地址:https://github.com/Ryan83602/Terra-Historicus-Comic-Downloader-cpp");
     curl_global_cleanup();
     close_log_file();
     return 0;
