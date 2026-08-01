@@ -73,4 +73,6 @@
 *   **侵权处理**：若本项目侵犯了您的合法权益，请通过 GitHub Issues 联系我们(学生回复稍慢请谅解)，我们将在看到后第一时间进行处理。若您认为有必要，请直接通过 GitHub 官方渠道发起 DMCA Takedown Notice。我们将严格遵守平台规则配合处理，并保留代码快照供研究用途使用。
 ---
 
-**Enjoy!** 🎉
+![?!325!?](https://cdn.jsdelivr.net/gh/Ryan83602/siren-music-downloader/%3F!325!%3F.png)
+
+# **已完成今日325大学习**
