@@ -1,4 +1,4 @@
-# Terra-Historicus-Comic-Downloader 📚
+# Terra-Historicus-Comic-Downloader-cpp 📚
 
 一款用于下载《明日方舟》官方漫画（123罗德岛！？）的命令行工具，支持 Windows 和 macOS。
 
@@ -66,7 +66,7 @@
 
 ### 版权声明
 
-本项目（Terra-Historicus-Comic-Downloader）仅为个人学习与研究用途的命令行工具。
+本项目（Terra-Historicus-Comic-Downloader-cpp）仅为个人学习与研究用途的命令行工具。
 
 *   **内容归属**：本项目所涉及的所有漫画内容，包括但不限于“罗德岛”、“123罗德岛!?”等，其全部知识产权均归 **鹰角网络（Hypergryph）** 所有。
 *   **工具性质**：本工具仅提供一种技术实现方式，用于访问鹰角网络官方漫画平台已公开的内容。开发者不对任何下载内容的使用负责。
