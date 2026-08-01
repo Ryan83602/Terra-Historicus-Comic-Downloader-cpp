@@ -52,7 +52,9 @@
 
 本项目采用 [GNU General Public License v3.0](LICENSE) 开源协议。
 
-本项目不盈利,虽然GNU General Public License v3.0允许商用,但是这也意味着你必须也按照相同许可证开源
+本项目为个人兴趣开发，非商业产品
+
+虽然GNU General Public License v3.0允许商用,但是这也意味着你必须也按照相同许可证开源
 
 ---
 
