@@ -50,6 +50,8 @@
 
 ## 📜 许可证
 
+本C++实现是全新独立开发，与旧版Python仓库（GPL-3.0）无代码关联。本项目仅适用AGPL-3.0。
+
 本项目采用 [GNU Affero General Public License v3.0](LICENSE) 开源协议。
 
 ---
